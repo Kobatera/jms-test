@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+  <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+    <param name="Target" value="System.out"/>
+    <param name="Threshold" value="INFO"/>
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern" value="%d [%t] %-5p %c %x - %m%n"/>
+    </layout>
+  </appender>
+  <appender name="FILE" class="org.apache.log4j.RollingFileAppender">
+    <param name="file" value="c:\\jms-test-xml.log"/>
+    <param name="Threshold" value="DEBUG"/>
+    <param name="MaxFileSize" value="1024KB"/>
+    <param name="MaxBackupIndex" value="5"/>
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern" value="[%x] %d{dd MMM yyyy/HH:mm:ss} %5p %c{2} - %m%n"/>
+    </layout>
+  </appender>
+  <appender name="ASYNC" class="org.apache.log4j.AsyncAppender">
+    <appender-ref ref="JMSTOPIC"/>
+  </appender>
+  <appender name="JMSTOPIC" class="org.apache.log4j.net.JMSAppender">
+    <param name="TopicConnectionFactoryBindingName" value="java:/ConnectionFactory"/>
+    <param name="TopicBindingName" value="topic/test"/>
+    <param name="ProviderURL" value="jnp://10.8.144.133:9099"/>
+  </appender>
+
+  <logger name="log4j.rootLogger" additivity="false">
+    <level value="ERROR"/>
+    <appender-ref ref="CONSOLE"/>
+  </logger>
+  <logger name="com.kobatera" additivity="false">
+    <level value="ERROR"/>
+    <appender-ref ref="FILE"/>
+  </logger>
+  <logger name="JMSTopicAppender" additivity="false">
+    <level value="INFO"/>
+    <appender-ref ref="ASYNC"/>
+  </logger>
+</log4j:configuration>
